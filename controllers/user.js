@@ -79,3 +79,52 @@ exports.createUser = async(req, res)=>{
         })
     }
 }
+
+exports.updateUser = async (req, res) => {
+    const {id} = req.params;
+    const {name, email} = req.body;
+
+    try {
+        const user = await User.findByPk(id); // Busqueda  por ID
+
+        user.name = name;
+        user.email = email;
+
+         await user.save();
+
+         res.json({
+            ok: true,
+            user
+         })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            ok:false,
+            message: 'Error actualizando usuario'
+        });
+    }
+}
+
+exports.deleteUser = async (req, res) =>{
+    const {id} = req.params;
+
+    try{
+        //Busqueda de usuario por ID en la BD
+        const user = await User.findByPk(id);
+        // Lo eliminamos de la BD
+        await user.destroy();
+
+        res.json({
+            ok: true,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            ok:false,
+            message: 'Error borrando usuario'
+        })
+    }
+}
+
+
+
